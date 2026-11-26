@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://dmpxjud5fckts"]
+
+[ext_resource type="Script" uid="uid://cl7kqsktcu13s" path="res://scripts/world.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://scenes/platform.tscn" id="2_platform"]
+[ext_resource type="PackedScene" uid="uid://bhqvyr5gax7v4" path="res://scenes/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/coin.tscn" id="4_coin"]
+[ext_resource type="Texture2D" uid="uid://cx6xpljbk402i" path="res://assets/platform.svg" id="5_ground_texture"]
+
+[sub_resource type="RectangleShape2D" id="Shape_ground"]
+size = Vector2(960, 24)
+
+[node name="World" type="Node2D" unique_id=493541824]
+script = ExtResource("1_world")
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1364599214]
+position = Vector2(480, 552)
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground" unique_id=938069400]
+scale = Vector2(5.333333, 1)
+texture = ExtResource("5_ground_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=1097043479]
+shape = SubResource("Shape_ground")
+
+[node name="Platform1" parent="." unique_id=873072776 instance=ExtResource("2_platform")]
+position = Vector2(290, 456)
+
+[node name="Platform2" parent="." unique_id=2048471736 instance=ExtResource("2_platform")]
+position = Vector2(490, 360)
+
+[node name="Platform3" parent="." unique_id=1602879169 instance=ExtResource("2_platform")]
+position = Vector2(710, 264)
+
+[node name="Player" parent="." unique_id=420606804 instance=ExtResource("3_player")]
+position = Vector2(96, 480)
+
+[node name="Coin" parent="." unique_id=424371946 instance=ExtResource("4_coin")]
+position = Vector2(710, 208)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=380829299]
+
+[node name="Title" type="Label" parent="HUD" unique_id=675657124]
+offset_left = 28.0
+offset_top = 22.0
+offset_right = 900.0
+offset_bottom = 64.0
+theme_override_colors/font_color = Color(0.32, 0.87, 0.82, 1)
+theme_override_font_sizes/font_size = 28
+text = "04 · Монетка"
+
+[node name="Instructions" type="Label" parent="HUD" unique_id=330171759]
+offset_left = 28.0
+offset_top = 68.0
+offset_right = 930.0
+offset_bottom = 104.0
+theme_override_font_sizes/font_size = 18
+text = "Соберите монетку. A / D или стрелки, пробел, R: заново."
+
+[node name="Score" type="Label" parent="HUD" unique_id=1524105139]
+offset_left = 28.0
+offset_top = 112.0
+offset_right = 350.0
+offset_bottom = 145.0
+theme_override_font_sizes/font_size = 22
+text = "Монет: 0"

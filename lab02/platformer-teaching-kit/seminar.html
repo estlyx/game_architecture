@@ -1,0 +1,346 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Семинар: один платформер в Godot</title><style>body{margin:0;background:#f6f5ef;color:#132c3c;font:18px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:980px;margin:auto;padding:40px 32px 100px}h1{font-size:42px;line-height:1.15;letter-spacing:-.03em}h2{font-size:29px;border-top:1px solid #c7d8d2;padding-top:26px;margin-top:42px;color:#087f7d}h3{font-size:23px}a{color:#087f7d}table{border-collapse:collapse;width:100%;font-size:16px}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #c7d8d2;padding:10px 12px 10px 0}pre{background:#142d3d;color:#e5f3ef;overflow:auto;padding:20px;font-size:15px;line-height:1.6}code{font-family:ui-monospace,Menlo,monospace}p code,li code{background:#e0e9e1;padding:2px 4px;font-size:.9em}nav{padding:12px 32px;border-bottom:1px solid #c7d8d2;font-size:15px}.notice{background:#e4ede5;padding:14px 20px;border-left:4px solid #087f7d}li{margin:8px 0}@media print{body{background:white;font-size:11pt}main{padding:0}nav{display:none}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:9pt}table{font-size:10pt}h2,h3{break-after:avoid}pre,tr{break-inside:avoid}}</style></head><body><nav><a href="index.html">Комплект</a> · <a href="lecture.html">Слайды</a></nav><main><h1>Семинар: один платформер в Godot</h1>
+<p>Цель: студент запускает маленькую игру, находит ввод, движение, столкновения и связь через сигнал, затем объясняет границу между кодом игры и возможностями движка.</p>
+<p>Основной маршрут рассчитан на 80 минут после подготовки компьютеров. Установку и загрузки выполните до занятия. Для преподавателя, который впервые открывает Godot, предусмотрите отдельную спокойную репетицию: это время не включено в 80 минут.</p>
+<h2 tabindex="-1">До занятия: подготовка MacBook Air M3</h2>
+<ol>
+<li>Скачайте обычную версию <strong>Godot 4 для macOS</strong> с https://godotengine.org/download/macos/. Вариант .NET здесь не нужен: используем GDScript. Официальная сборка поддерживает Apple Silicon.</li>
+<li>Распакуйте приложение. Откройте Godot обычным способом. Установку в Applications можно выполнить вручную, но для работы достаточно распакованного приложения. Если macOS блокирует запуск, используйте официальную инструкцию Godot по запуску на macOS, не отключайте защиту системы целиком.</li>
+<li>Распакуйте этот комплект в папку, где вы будете работать. Сохраните исходный архив как запасную копию.</li>
+<li>В менеджере проектов Godot нажмите <strong>Import</strong>, выберите <code>godot/04_coin/project.godot</code>, затем откройте проект. Если появляется выбор редактирования, выберите Edit. Подождите окончания первого импорта SVG.</li>
+<li>Кнопкой ▶ <strong>Run Project</strong> справа сверху запустите игру. Клавиатурный эквивалент: F5, на Mac часто Fn+F5. Стоп: кнопка ■ или F8 / Fn+F8. У некоторых версий игра открывается внутри редактора, у других в отдельном окне. Нажмите внутри игры, чтобы она получила фокус.</li>
+<li>Пройдите путь: вправо до первой платформы, прыжок, переход на вторую, затем на третью. Монетка находится над третьей. Прыгать удобнее ближе к краю платформы. Проверьте, что после подбора счётчик показывает 1, а R возвращает уровень и счётчик в начальное состояние.</li>
+<li>В меню <strong>Debug</strong> включите <strong>Visible Collision Shapes</strong>, снова запустите игру. Убедитесь, что можете показать границы физических тел. Затем отключите этот режим.</li>
+<li>Репетируйте три эксперимента из раздела ниже. Слайды откройте отдельно. Не показывайте заметки с готовыми ответами на проекторе.</li>
+</ol>
+<p>Если у студентов нет установленных редакторов, проведите демонстрацию с прогнозами аудитории и выдайте практику после занятия. Не расходуйте семинар на параллельную установку всего окружения.</p>
+<h2 tabindex="-1">Два способа работы</h2>
+<p><strong>Сборка с нуля:</strong> создайте собственный проект и выполните шаги 0–5. SVG возьмите из <code>godot/04_coin/assets</code>. Не копируйте готовые сцены в свой проект, если хотите пройти сборку самостоятельно.</p>
+<p><strong>Показ с восстановлением:</strong> импортируйте готовые этапы 00–04 как отдельные проекты. При ошибке остановите текущую игру и откройте следующий готовый этап через менеджер проектов. Папка этапа целиком самодостаточна.</p>
+<p>Ориентиры: сцена — сохраняемое дерево узлов, узел — объект с определённой ролью, экземпляр сцены — её размещение внутри другой сцены. Inspector справа показывает свойства выбранного узла, FileSystem показывает файлы проекта, Scene показывает дерево текущей сцены. Названия панелей могут немного различаться между версиями и языками интерфейса.</p>
+<h2 tabindex="-1">План на 80 минут</h2>
+<table>
+<thead>
+<tr>
+<th>Минуты</th>
+<th>Работа</th>
+<th>Наблюдаемый результат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–5</td>
+<td>Запуск готовой игры и прогноз</td>
+<td>Все видят конечную задачу</td>
+</tr>
+<tr>
+<td>5–15</td>
+<td>Шаг 0: комната и пол</td>
+<td>Пустая сцена запускается</td>
+</tr>
+<tr>
+<td>15–27</td>
+<td>Шаг 1: герой и падение</td>
+<td>Герой останавливается на полу</td>
+</tr>
+<tr>
+<td>27–42</td>
+<td>Шаг 2: ввод и прыжок</td>
+<td>Герой управляется</td>
+</tr>
+<tr>
+<td>42–50</td>
+<td>Шаг 3: повторение платформ</td>
+<td>Один ресурс сцены даёт три платформы</td>
+</tr>
+<tr>
+<td>50–65</td>
+<td>Шаги 4–5: монетка и счётчик</td>
+<td>Подбор вызывает сигнал и меняет счёт</td>
+</tr>
+<tr>
+<td>65–75</td>
+<td>Эксперименты</td>
+<td>Студенты связывают правку с поведением</td>
+</tr>
+<tr>
+<td>75–80</td>
+<td>Сдача и обсуждение</td>
+<td>Каждый объясняет одно изменение</td>
+</tr>
+</tbody>
+</table>
+<h2 tabindex="-1">Шаг 0. Комната и пол</h2>
+<p><strong>Вопрос до работы:</strong> «Если нарисовать пол, будет ли он удерживать героя?»</p>
+<ol>
+<li>В менеджере Godot выберите <strong>Create</strong>. Название: <code>OnePlatformer</code>. Выберите новую пустую папку. Renderer: <strong>Compatibility</strong>. Если предлагается Version Control Metadata, для этого упражнения можно выбрать None.</li>
+<li>Откройте Project → Project Settings → Display → Window. Задайте viewport width <strong>960</strong>, height <strong>600</strong>. При необходимости используйте поиск <code>viewport_width</code> / <code>viewport_height</code>. Для Stretch → Mode выберите <code>canvas_items</code>.</li>
+<li>В Project Settings → Rendering → Environment измените Default Clear Color на тёмный, например <code>#0e1624</code>. Это влияет только на вид фона.</li>
+<li>В FileSystem создайте папки <code>assets</code>, <code>scenes</code>, <code>scripts</code>. Скопируйте три SVG из <code>godot/04_coin/assets</code> в вашу <code>assets</code> через Finder. Вернитесь в редактор и дождитесь импорта.</li>
+<li>Создайте сцену с корнем <strong>StaticBody2D</strong>. Переименуйте корень в <code>Platform</code>. Сохраните как <code>scenes/platform.tscn</code>.</li>
+<li>Добавьте к Platform узел <strong>Sprite2D</strong>. Перетащите <code>platform.svg</code> из FileSystem в свойство Texture в Inspector. Изображение имеет размер 180 × 24.</li>
+<li>Добавьте к Platform узел <strong>CollisionShape2D</strong>. В свойстве Shape выберите <strong>New RectangleShape2D</strong>. Нажмите на созданный ресурс и установите Size <strong>(180, 24)</strong>. Положение дочерних узлов оставьте <strong>(0, 0)</strong>.</li>
+<li>Выберите Platform. В Collision Layer включите только слой <strong>1</strong>, в Collision Mask только слой <strong>2</strong>. Слои — номера переключателей, а не числовые маски: герой позже будет на слое 2.</li>
+<li>Создайте новую сцену <strong>Node2D</strong>, назовите корень <code>World</code>, сохраните как <code>scenes/world.tscn</code>.</li>
+<li>В World добавьте <strong>StaticBody2D</strong>, имя <code>Ground</code>, Position <strong>(480, 552)</strong>. Layer только <strong>1</strong>, Mask только <strong>2</strong>. Под ним добавьте Sprite2D с <code>platform.svg</code>, Scale этого <strong>Sprite2D</strong> = <strong>(5.333333, 1)</strong>. Добавьте к Ground CollisionShape2D с новым RectangleShape2D, Size <strong>(960, 24)</strong>. Scale самого Ground и CollisionShape2D оставьте <strong>(1, 1)</strong>. Так изображение пола растягивается отдельно, а размеры физической формы заданы явно.</li>
+<li>Нажмите Run Project и при запросе главной сцены выберите текущую <code>world.tscn</code>.</li>
+</ol>
+<p><strong>Должно получиться:</strong> пол внизу окна. Героя ещё нет. Готовый аналог: <code>00_room</code>.</p>
+<p><strong>Что сказать:</strong> «Sprite2D отвечает за вид. CollisionShape2D задаёт геометрию, которую использует физика. Это два разных представления одного объекта».</p>
+<h2 tabindex="-1">Шаг 1. Герой падает</h2>
+<ol>
+<li>Создайте новую сцену с корнем <strong>CharacterBody2D</strong>, назовите <code>Player</code>. Сохраните как <code>scenes/player.tscn</code>.</li>
+<li>Добавьте <strong>Sprite2D</strong>, Texture = <code>hero.svg</code>.</li>
+<li>Добавьте <strong>CollisionShape2D</strong>, Shape = New RectangleShape2D, Size <strong>(36, 44)</strong>. Оба дочерних узла в позиции <strong>(0, 0)</strong>.</li>
+<li>Для Player установите Collision Layer только <strong>2</strong>, Collision Mask только <strong>1</strong>.</li>
+<li>В панели Node → Groups добавьте Player в группу <code>player</code>. Это имя проверяет монетка. В новых версиях панель групп может быть отдельной вкладкой рядом с Signals.</li>
+<li>Прикрепите к Player скрипт <code>scripts/player.gd</code>. Отключите шаблон или полностью замените созданный текст содержимым <code>godot/01_falling/scripts/player.gd</code>.</li>
+</ol>
+<pre><code class="language-gdscript">extends CharacterBody2D
+@export var gravity: float = 1400.0
+
+func _physics_process(delta: float) -&gt; void:
+    if not is_on_floor():
+        velocity.y += gravity * delta
+    move_and_slide()
+</code></pre>
+<ol start="7">
+<li>Сохраните сцену. Вернитесь в World. Перетащите туда <code>player.tscn</code>, Position <strong>(96, 180)</strong>.</li>
+<li>Запустите <strong>проект</strong>, а не отдельную сцену героя. При запуске отдельного Player пола не будет.</li>
+</ol>
+<p><strong>До запуска спросить:</strong> «Кто в этом фрагменте задаёт гравитацию, а кто проверяет столкновение?»</p>
+<p><strong>Должно получиться:</strong> герой падает и останавливается на полу. Клавиши пока ничего не делают. Аналог: <code>01_falling</code>.</p>
+<p><strong>Объяснение:</strong> ось Y направлена вниз. Наш код увеличивает вертикальную скорость. Метод Godot <code>move_and_slide()</code> перемещает тело с обработкой столкновений. CharacterBody2D не получает гравитацию автоматически. <code>delta</code> — длительность шага в секундах. Пока достаточно этой роли, подробное устройство игрового цикла будет на следующей теме.</p>
+<h2 tabindex="-1">Шаг 2. Движение и прыжок</h2>
+<ol>
+<li>Откройте Project → Project Settings → <strong>Input Map</strong>. Создайте действия с точными именами:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Имя</th>
+<th>Клавиши</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>move_left</td>
+<td>A и Left</td>
+</tr>
+<tr>
+<td>move_right</td>
+<td>D и Right</td>
+</tr>
+<tr>
+<td>jump</td>
+<td>Space</td>
+</tr>
+<tr>
+<td>restart</td>
+<td>R</td>
+</tr>
+</tbody>
+</table>
+<p>Добавляйте событие кнопкой + возле действия. Можно нажать нужную клавишу в окне назначения. Для A / D / R удобно выбрать Physical Key, чтобы управление не зависело от раскладки. Удалять встроенные действия <code>ui_*</code> не нужно.</p>
+<ol start="2">
+<li>Полностью замените <code>player.gd</code> содержимым <code>godot/02_jump/scripts/player.gd</code>. Полный текст находится также ниже. Не вставляйте его после прежнего кода: в файле должна остаться одна функция <code>_physics_process</code>.</li>
+</ol>
+<pre><code class="language-gdscript">extends CharacterBody2D
+@export var speed: float = 240.0
+@export var jump_velocity: float = -560.0
+@export var gravity: float = 1400.0
+
+var spawn_position: Vector2
+
+func _ready() -&gt; void:
+    spawn_position = global_position
+
+func _physics_process(delta: float) -&gt; void:
+    if not is_on_floor():
+        velocity.y += gravity * delta
+
+    var direction := Input.get_axis(&quot;move_left&quot;, &quot;move_right&quot;)
+    velocity.x = direction * speed
+
+    if Input.is_action_just_pressed(&quot;jump&quot;) and is_on_floor():
+        velocity.y = jump_velocity
+
+    move_and_slide()
+    global_position.x = clampf(global_position.x, 20.0, 940.0)
+
+    if global_position.y &gt; 700.0:
+        global_position = spawn_position
+        velocity = Vector2.ZERO
+</code></pre>
+<ol start="3">
+<li>В World переместите Player в <strong>(96, 480)</strong>. Сохраните. Запустите проект.</li>
+<li>Проверьте движение и прыжок. Повторное нажатие в воздухе не должно давать второй прыжок. R заработает после подключения <code>world.gd</code> на шаге 5. В готовых этапах перезапуск уже подключён.</li>
+</ol>
+<p><strong>Код читать четырьмя действиями:</strong> применить гравитацию, узнать направление, задать скорость прыжка при стоянии на полу, попросить движок переместить тело. Возврат после падения и ограничение X — служебная защита для демонстрации, отдельно их не разбираем.</p>
+<p><strong>Важно:</strong> <code>velocity</code> измеряется в пикселях в секунду. Не умножайте её ещё раз на delta перед <code>move_and_slide()</code>. В нашем коде delta нужна для изменения скорости под действием ускорения.</p>
+<h2 tabindex="-1">Шаг 3. Три платформы из одной сцены</h2>
+<ol>
+<li>В World перетащите <code>platform.tscn</code> ещё три раза. Создайте экземпляры с параметрами:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Имя</th>
+<th>Position</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform1</td>
+<td>(290, 456)</td>
+<td>(1, 1)</td>
+</tr>
+<tr>
+<td>Platform2</td>
+<td>(490, 360)</td>
+<td>(1, 1)</td>
+</tr>
+<tr>
+<td>Platform3</td>
+<td>(710, 264)</td>
+<td>(1, 1)</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li>Создавайте платформы из <code>platform.tscn</code>, а не дублированием Ground: у пола другая ширина. Scale новых экземпляров оставьте (1, 1).</li>
+<li>Сохраните, запустите, доберитесь до третьей платформы. Перед прыжком подходите к краю предыдущей.</li>
+</ol>
+<p><strong>Вопрос:</strong> «Если изменить исходную сцену Platform, какие экземпляры изменятся? А если изменить только Position одного экземпляра?»</p>
+<p><strong>Вывод:</strong> повторно используется сохранённая сцена объекта. Это ещё не выделение собственного движка, но уже понятный механизм композиции. Аналог: <code>03_platforms</code>.</p>
+<h2 tabindex="-1">Шаг 4. Монетка сообщает о подборе</h2>
+<ol>
+<li>Создайте сцену с корнем <strong>Area2D</strong>, назовите <code>Coin</code>, сохраните как <code>scenes/coin.tscn</code>.</li>
+<li>Добавьте Sprite2D с <code>coin.svg</code>.</li>
+<li>Добавьте CollisionShape2D с <strong>CircleShape2D</strong>, Radius <strong>14</strong>.</li>
+<li>На корне Coin отключите все Collision Layer, в Collision Mask оставьте только <strong>2</strong>. Монетка отслеживает героя, но не является твёрдым препятствием.</li>
+<li>Добавьте корень Coin в группу <strong>coins</strong> через Node → Groups.</li>
+<li>Прикрепите <code>scripts/coin.gd</code>. Скопируйте содержимое из <code>godot/04_coin/scripts/coin.gd</code>:</li>
+</ol>
+<pre><code class="language-gdscript">extends Area2D
+signal collected
+
+var taken: bool = false
+
+func _ready() -&gt; void:
+    body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body: Node2D) -&gt; void:
+    if taken or not body.is_in_group(&quot;player&quot;):
+        return
+    taken = true
+    collected.emit()
+    queue_free()
+</code></pre>
+<ol start="7">
+<li>Сохраните, поместите экземпляр Coin в World, Position <strong>(710, 208)</strong>.</li>
+</ol>
+<p>Сигнал <code>body_entered</code> подключает сам скрипт. Не подключайте его повторно через редактор. <code>taken</code> защищает от повторного подбора до фактического удаления узла. <code>queue_free()</code> удаляет узел безопасно в конце обработки кадра.</p>
+<p><strong>Прогноз:</strong> «Сейчас монетка исчезнет. Появится ли счёт?» Ответ: счёт ещё никто не хранит. Сам сигнал не создаёт получателя.</p>
+<h2 tabindex="-1">Шаг 5. Уровень связывает сигнал и счётчик</h2>
+<ol>
+<li>В World добавьте узел <strong>CanvasLayer</strong>, имя <strong>HUD</strong>. Под HUD добавьте <strong>Label</strong>, имя <strong>Score</strong>, Text = <code>Монет: 0</code>. В Layout / Transform установите Position (28, 112). Для читаемости задайте Theme Overrides → Font Sizes → Font Size <strong>22</strong>.</li>
+<li>При желании добавьте под HUD Label <strong>Title</strong> с текстом <code>Один платформер</code>, Position (28, 22), размер шрифта 28. Ещё один Label <strong>Instructions</strong>: <code>A / D или стрелки, пробел, R: заново</code>, Position (28, 68), размер 18. Эти две подписи не обязательны для логики.</li>
+<li>Прикрепите к корню World скрипт <code>scripts/world.gd</code>. Вставьте содержимое из готового этапа 04:</li>
+</ol>
+<pre><code class="language-gdscript">extends Node2D
+var score: int = 0
+@onready var score_label: Label = $HUD/Score
+
+func _ready() -&gt; void:
+    for coin in get_tree().get_nodes_in_group(&quot;coins&quot;):
+        coin.connect(&quot;collected&quot;, _on_coin_collected)
+
+func _on_coin_collected() -&gt; void:
+    score += 1
+    score_label.text = &quot;Монет: %d&quot; % score
+
+func _unhandled_input(event: InputEvent) -&gt; void:
+    if event.is_action_pressed(&quot;restart&quot;):
+        get_tree().reload_current_scene()
+</code></pre>
+<ol start="4">
+<li>Запустите. Подберите монетку. Счётчик должен увеличиться ровно на 1. Нажмите R: уровень перезагрузится, монетка вернётся, счёт станет 0.</li>
+<li>Для проверки повторного использования остановите игру, дублируйте <strong>экземпляр Coin в World</strong> сочетанием Cmd+D или через контекстное меню Duplicate. Второй экземпляр поставьте в (490, 304). Запустите и соберите обе монетки. Ожидаемый счёт 2.</li>
+</ol>
+<p>В этом небольшом примере World знает путь <code>$HUD/Score</code> и связывает получателей. Монетка о HUD не знает. Подписка выполняется один раз для монеток, уже находящихся в сцене. Динамическое создание монеток в ходе игры потребовало бы отдельного подключения — это за пределами упражнения.</p>
+<h2 tabindex="-1">Три обязательных эксперимента</h2>
+<h3>А. Высота прыжка</h3>
+<p>Остановите игру. В World выберите Player. В Inspector измените экспортированное свойство <strong>Jump Velocity</strong> с -560 на <strong>-720</strong>. Спросите, станет прыжок выше или ниже, затем запустите. Модуль числа больше, начальная скорость вверх выше, прыжок выше. Физический движок мы не меняли. Верните -560.</p>
+<p>Если свойство не видно, откройте скрипт и убедитесь, что перед переменной стоит <code>@export</code>. Если изменение в коде не влияет на результат, проверьте, нет ли сохранённого переопределения свойства в Inspector экземпляра.</p>
+<h3>Б. Клавиша прыжка</h3>
+<p>Остановите игру. Project Settings → Input Map → jump. Добавьте <strong>J</strong> и удалите Space из этого действия. В игровых скриптах ничего не меняйте. Запустите, проверьте J и пробел. Верните Space и удалите J.</p>
+<p>Прогноз: «Где мы будем менять код героя?» Ответ: в этом эксперименте достаточно изменить привязку действия. Имя <code>jump</code> служит границей между устройством и правилом игры.</p>
+<h3>В. Изображение и столкновение</h3>
+<p>Для самого ясного показа используйте готовый этап <strong>02_jump</strong>. Откройте исходную сцену <code>player.tscn</code>, выберите CollisionShape2D, включите <strong>Disabled</strong>, сохраните и запустите <strong>проект</strong>. Герой провалится сквозь пол и после выхода за нижнюю границу вернётся к старту. Повторение падения предусмотрено защитой в player.gd.</p>
+<p>Верните Disabled = Off. Теперь у Sprite2D отключите Visibility → Visible. Запустите. Герой невидим, но тело продолжает сталкиваться с полом. Для наблюдения включите Debug → Visible Collision Shapes. После опыта верните Visible = On и отключите отладочное отображение.</p>
+<p>Итоговый вопрос: «Что нужно было изменить: рисунок, геометрию столкновения или правило движения?»</p>
+<h2 tabindex="-1">Если есть только 50 минут</h2>
+<p>Не собирайте проект с нуля. 5 минут играем в этап 04, 10 минут разбираем Player, 15 минут проводим три эксперимента, 10 минут показываем сигнал монетки и дублируем её, 10 минут составляем таблицу «игра / движок» и обсуждаем ответы. Сборку с нуля выдаём как самостоятельную работу.</p>
+<h2 tabindex="-1">Что проверять при ошибках</h2>
+<table>
+<thead>
+<tr>
+<th>Симптом</th>
+<th>Проверка</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ошибка разбора скрипта</td>
+<td>Godot 4, отступы, файл полностью заменён, нет двух функций с одним именем</td>
+</tr>
+<tr>
+<td>Герой падает сквозь пол</td>
+<td>На обоих объектах есть Shape, Disabled выключен, слой пола 1, маска героя 1</td>
+</tr>
+<tr>
+<td>Видна только фигура без пола</td>
+<td>Запущена сцена Player вместо World. Используйте Run Project</td>
+</tr>
+<tr>
+<td>Клавиши не работают</td>
+<td>Фокус игрового окна, точные имена Input Map, используемый этап не 01</td>
+</tr>
+<tr>
+<td>Прыжок не происходит</td>
+<td>Герой на полу, Shape активен, действие jump назначено</td>
+</tr>
+<tr>
+<td>Монетка не исчезает</td>
+<td>У героя группа player, у Coin Collision Mask 2, скрипт прикреплён</td>
+</tr>
+<tr>
+<td>Монетка исчезла, счёт не изменился</td>
+<td>У Coin группа coins, World со скриптом, узлы названы HUD и Score</td>
+</tr>
+<tr>
+<td>Node not found: HUD/Score</td>
+<td>Создайте HUD/Score с точными именами или поправьте путь в world.gd</td>
+</tr>
+<tr>
+<td>Правка не видна в игре</td>
+<td>Остановите игру, сохраните сцену, проверьте Inspector и открытый проект</td>
+</tr>
+<tr>
+<td>Вместо ошибки тратим 10 минут</td>
+<td>Откройте следующий готовый этап. Разбор причины оставьте после занятия</td>
+</tr>
+</tbody>
+</table>
+<h2 tabindex="-1">Минимальная репетиция перед аудиторией</h2>
+<ul>
+<li>Все пять проектов открываются и запускаются на вашем Mac без ошибок Debugger.</li>
+<li>Герой достигает монетки, счёт меняется, R восстанавливает уровень.</li>
+<li>Пройдены три эксперимента, затем исходные свойства восстановлены.</li>
+<li>Вторая монетка увеличивает счёт до 2.</li>
+<li>Окно игры и размер текста удобны для проектора.</li>
+<li>Вы можете открыть запасной этап без поиска по папкам.</li>
+</ul>
+<p>Это критерии готовности к показу, а не утверждение, что запуск уже проверен в среде подготовки. Автоматическая проверка ресурсов выполнена отдельно. Дополнительный запуск через Godot описан в checks/README.md.</p>
+</main></body></html>

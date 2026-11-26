@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/platform.svg" id="1_texture"]
+
+[sub_resource type="RectangleShape2D" id="Shape_platform"]
+size = Vector2(180, 24)
+
+[node name="Platform" type="StaticBody2D"]
+collision_layer = 1
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape_platform")

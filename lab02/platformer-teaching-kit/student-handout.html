@@ -1,0 +1,67 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Практика: где заканчивается движок и начинается игра</title><style>body{margin:0;background:#f6f5ef;color:#132c3c;font:18px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:980px;margin:auto;padding:40px 32px 100px}h1{font-size:42px;line-height:1.15;letter-spacing:-.03em}h2{font-size:29px;border-top:1px solid #c7d8d2;padding-top:26px;margin-top:42px;color:#087f7d}h3{font-size:23px}a{color:#087f7d}table{border-collapse:collapse;width:100%;font-size:16px}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #c7d8d2;padding:10px 12px 10px 0}pre{background:#142d3d;color:#e5f3ef;overflow:auto;padding:20px;font-size:15px;line-height:1.6}code{font-family:ui-monospace,Menlo,monospace}p code,li code{background:#e0e9e1;padding:2px 4px;font-size:.9em}nav{padding:12px 32px;border-bottom:1px solid #c7d8d2;font-size:15px}.notice{background:#e4ede5;padding:14px 20px;border-left:4px solid #087f7d}li{margin:8px 0}@media print{body{background:white;font-size:11pt}main{padding:0}nav{display:none}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:9pt}table{font-size:10pt}h2,h3{break-after:avoid}pre,tr{break-inside:avoid}}</style></head><body><nav><a href="index.html">Комплект</a> · <a href="lecture.html">Слайды</a></nav><main><h1>Практика: где заканчивается движок и начинается игра</h1>
+<p>Работайте по одному или в парах. Исходная игра: герой, три платформы и монетка. Инструкция сборки находится в seminar.md, готовая версия — godot/04_coin.</p>
+<h2 tabindex="-1">Обязательная часть</h2>
+<ol>
+<li>Запустите игру и соберите монетку.</li>
+<li>Измените высоту прыжка. До запуска запишите прогноз, после запуска — наблюдение.</li>
+<li>Переназначьте прыжок на другую клавишу через Input Map. Сохраните имя действия jump.</li>
+<li>Отключите коллайдер героя, наблюдайте результат, затем восстановите его.</li>
+<li>Добавьте вторую монетку как экземпляр сцены. Проверьте счёт 2.</li>
+</ol>
+<h2 tabindex="-1">Что сдать</h2>
+<p>Один короткий Markdown или PDF с таблицей и двумя снимками экрана. Срок и канал сдачи сообщает преподаватель.</p>
+<table>
+<thead>
+<tr>
+<th>Изменение</th>
+<th>Мой прогноз</th>
+<th>Что изменил</th>
+<th>Что наблюдал</th>
+<th>Игра или возможность движка?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Высота прыжка</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Клавиша прыжка</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Коллайдер</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Вторая монетка</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Дополнительно ответьте:</p>
+<ul>
+<li>Что делает наш player.gd, а что выполняет move_and_slide()?</li>
+<li>Где хранится счёт? Знает ли coin.gd путь к надписи со счётом?</li>
+<li>Какие файлы вы возьмёте во вторую игру? Какие правила придётся пересмотреть?</li>
+</ul>
+<h2 tabindex="-1">Критерии зачёта</h2>
+<p>Игра запускается. Студент объясняет результат экспериментов, различает изображение и коллайдер, показывает привязку действия jump и путь сигнала collected. Изменение цвета или картинки само по себе не заменяет объяснение.</p>
+<h2 tabindex="-1">После семинара: карта модулей v0.1</h2>
+<p>Составьте карту из 4–6 частей для своей игры. Для каждой укажите ответственность, вход или публичную операцию, разрешённые зависимости. Отдельно отметьте то, что предоставляет выбранный движок. Не называйте каждый узел сцены модулем движка автоматически.</p>
+<p>Пример записи: «Контроллер героя получает действия move_left / move_right / jump, задаёт скорость тела и использует API столкновений. Он не обращается к тексту счёта».</p>
+<p>Запишите одно решение: требование, выбранная граница, причина, цена изменения. Например: «Нужно переназначать клавиши. Используем имена действий Input Map. Поддерживаем таблицу привязок и избегаем прямой проверки Space в логике прыжка».</p>
+<p>Использование ИИ укажите одной фразой: с чем он помог и как вы проверили результат.</p>
+</main></body></html>
